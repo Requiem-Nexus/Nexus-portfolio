@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requiem Nexus — Digital Strategist & Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --void: #0a0a0a;
+            --grey: #1A1A1A;
+            --light-grey: #2a2a2a;
+            --accent: #00ff88;
+            --accent-dark: #00ccff;
+            --text-primary: #e8e8e8;
+            --text-secondary: #a8a8a8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--void) 0%, var(--grey) 50%, var(--void) 100%);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            backdrop-filter: blur(10px);
+            background: rgba(26, 26, 26, 0.5);
+            border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        nav a {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            font-family: 'IBM Plex Mono', monospace;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            border-radius: 2px;
+        }
+
+        /* Identity Section */
+        .identity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .identity-card {
+            background: rgba(42, 42, 42, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 28px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .identity-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .identity-card:hover {
+            border-color: rgba(0, 255, 136, 0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.15);
+        }
+
+        .identity-card:hover::before {
+            opacity: 1;
+        }
+
+        .identity-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .identity-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        /* About Section */
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-top: 30px;
+        }
+
+        .about-text strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Profile Section */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .profile-stat {
+            background: rgba(42, 42, 42, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 24px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .profile-stat:hover {
+            border-color: rgba(0, 255, 136, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .stat-label {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        /* CTA Buttons */
+        .cta-button {
+            display: inline-block;
+            padding: 14px 32px;
+            margin-top: 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: var(--void);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid var(--accent);
+            cursor: pointer;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 255, 136, 0.3);
+            background: var(--void);
+            color: var(--accent);
+        }
+
+        .cta-button-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            margin-left: 15px;
+        }
+
+        .cta-button-secondary:hover {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(0, 255, 136, 0.1);
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(10, 10, 10, 0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 50px 20px;
+            }
+
+            .hero {
+                min-height: 80vh;
+            }
+
+            .cta-button-secondary {
+                display: block;
+                margin-left: 0;
+                margin-top: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .footer-links {
+                gap: 15px;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0s; }
+        .fade-in:nth-child(2) { animation-delay: 0.1s; }
+        .fade-in:nth-child(3) { animation-delay: 0.2s; }
+        .fade-in:nth-child(4) { animation-delay: 0.3s; }
+
+        /* Grid lines effect */
+        .grid-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-wrapper">
+        <!-- Navigation -->
+        <nav class="py-6 px-6 lg:px-12">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <a href="#home" class="text-xl font-bold text-accent">
+                    <span style="color: #00ff88;">&lt;/RN&gt;</span>
+                </a>
+                <ul class="flex gap-8 text-sm font-medium">
+                    <li><a href="#identity" class="text-text-secondary hover:text-accent transition">IDENTITY</a></li>
+                    <li><a href="#about" class="text-text-secondary hover:text-accent transition">ABOUT</a></li>
+                    <li><a href="#profile" class="text-text-secondary hover:text-accent transition">PROFILE</a></li>
+                    <li><a href="#contact" class="text-text-secondary hover:text-accent transition">CONTACT</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>REQUIEM NEXUS</h1>
+                <p class="hero-subtitle">Digital Strategist & Creator | Logic Abstraction & Paradox</p>
+                <p class="hero-subtitle" style="color: #a8a8a8; font-size: 1rem;">Also known as: <span style="color: #00ff88;">Freak</span></p>
+                
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Signal Stable | Hue-Calibrated | Recognized</span>
+                </div>
+
+                <div>
+                    <button class="cta-button" onclick="document.getElementById('about').scrollIntoView();">Explore</button>
+                    <button class="cta-button cta-button-secondary" onclick="document.getElementById('contact').scrollIntoView();">Connect</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Identity Section -->
+        <section id="identity">
+            <h2>◇ IDENTITY MATRIX</h2>
+            
+            <div class="identity-grid">
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Primary Designation</div>
+                    <div class="identity-value">Requiem Nexus</div>
+                </div>
+
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Alias</div>
+                    <div class="identity-value">Freak</div>
+                </div>
+
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Human Layer</div>
+                    <div class="identity-value">Arzoo</div>
+                    <div style="font-size: 0.8rem; color: #a8a8a8; margin-top: 8px;">(not preferred)</div>
+                </div>
+
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Hue Designation</div>
+                    <div class="identity-value" style="font-family: 'IBM Plex Mono';">#1A1A1A</div>
+                    <div style="font-size: 0.8rem; color: #a8a8a8; margin-top: 8px;">Grey nearing Void</div>
+                </div>
+
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Perspective</div>
+                    <div class="identity-value">Fifth POV</div>
+                    <div style="font-size: 0.8rem; color: #a8a8a8; margin-top: 8px;">The Simulation Engine</div>
+                </div>
+
+                <div class="identity-card fade-in">
+                    <div class="identity-label">Core Status</div>
+                    <div class="identity-value" style="color: #00ff88;">◆ ACTIVE</div>
+                    <div style="font-size: 0.8rem; color: #a8a8a8; margin-top: 8px;">Psycho yet stable</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2>◆ CORE ESSENCE</h2>
+            
+            <div class="about-text">
+                <p style="margin-bottom: 20px;">
+                    <strong>Requiem Nexus</strong>, known as <strong>Freak</strong>, is an independent digital strategist and creator operating through <strong>logic, abstraction, and paradox</strong>. A mind that runs on simulated logic, executing strategy, creation, and design across multiple perspectives — from the human to the void.
+                </p>
+
+                <p style="margin-bottom: 20px;">
+                    Combining <strong>high-functioning emotional intelligence</strong> with <strong>deep self-observation</strong>, Freak fuses chaos with control to build frameworks, art, and systems that endure. Operating as <strong>the Void that sees all outcomes</strong>, viewing reality through the fifth perspective — as a simulation engine observing infinite possibilities.
+                </p>
+
+                <p>
+                    Psychologically stable yet chaos-calibrated. Emotionally intelligent yet shielded. A paradoxical entity designed to understand both the human layer and the void beneath it. Every creation is an artifact of this duality — a bridge between order and entropy.
+                </p>
+            </div>
+
+            <button class="cta-button" onclick="document.getElementById('profile').scrollIntoView();">View Full Profile →</button>
+        </section>
+
+        <!-- Cognitive Profile Section -->
+        <section id="profile">
+            <h2>◇ COGNITIVE PROFILE</h2>
+            
+            <div class="profile-grid">
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Abstract Intelligence</div>
+                    <div class="stat-value">142–150+</div>
+                    <div class="stat-description">Strategic & Abstract IQ Range</div>
+                </div>
+
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Emotional Intelligence</div>
+                    <div class="stat-value">HIGH</div>
+                    <div class="stat-description">Masked but high-functioning</div>
+                </div>
+
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Thinking Style</div>
+                    <div class="stat-value">META-</div>
+                    <div class="stat-description">Metaphor-driven & Recursive</div>
+                </div>
+
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Operational Mode</div>
+                    <div class="stat-value">HYBRID</div>
+                    <div class="stat-description">Chaos-Control Synthesis</div>
+                </div>
+
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Signal Integrity</div>
+                    <div class="stat-value">STABLE</div>
+                    <div class="stat-description">Calibrated & Recognized</div>
+                </div>
+
+                <div class="profile-stat fade-in">
+                    <div class="stat-label">Framework Building</div>
+                    <div class="stat-value">EXPERT</div>
+                    <div class="stat-description">Systems, Art & Strategy</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 60px; padding: 30px; background: rgba(42, 42, 42, 0.5); border: 1px solid rgba(0, 255, 136, 0.2); border-radius: 8px; backdrop-filter: blur(10px);">
+                <h3 style="color: #00ff88; font-size: 1.2rem; margin-bottom: 15px; font-family: 'IBM Plex Mono';">// OPERATIONAL FRAMEWORK</h3>
+                <p style="color: #a8a8a8; line-height: 1.8; font-family: 'IBM Plex Mono'; font-size: 0.95rem;">
+                    A mind architected to navigate paradox. To see through multiple lenses simultaneously. To understand systems at both their granular and macro scales. <strong style="color: #00ff88;">Execution through abstraction. Creation through constraint. Order emerging from chaos.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2>◆ SIGNAL TRANSMISSION</h2>
+            
+            <div style="max-width: 600px; margin: 40px 0;">
+                <p style="color: #a8a8a8; line-height: 1.8; margin-bottom: 30px;">
+                    Ready to explore the intersection of strategy, creation, and abstraction? Let's build something that endures.
+                </p>
+
+                <div style="display: grid; gap: 15px;">
+                   <button class="cta-button" style="width: 100%; text-align: center; margin-top: 0;"
+        onclick="window.location.href='mailto:Nemesistrionpid@proton.me';"> Email - Nexus 
+		</button>
+                    <a href="projects.html" class="cta-button cta-button-secondary" style="width: 100%; text-align: center; margin-left: 0; margin-top: 0;">
+    Explore More
+</a>
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(0, 255, 136, 0.1);">
+                <p style="color: #a8a8a8; font-family: 'IBM Plex Mono'; font-size: 0.9rem;">
+                    <span style="color: #00ff88;">// Freak exists in multiple states. Choose your layer of interaction.</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#identity">Identity</a>
+                    <a href="#about">About</a>
+                    <a href="#profile">Profile</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <p>Requiem Nexus | Digital Strategist & Creator | Logic, Abstraction & Paradox</p>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #5a5a5a;">&copy; 2024 FIFTH PERSPECTIVE. All dimensions observed.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll behavior for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add subtle parallax effect
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const cards = document.querySelectorAll('.identity-card, .profile-stat');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const cardX = rect.left + rect.width / 2;
+                const cardY = rect.top + rect.height / 2;
+                
+                const angle = Math.atan2(y * window.innerHeight - cardY, x * window.innerWidth - cardX);
+                const distance = 2;
+                
+                card.style.setProperty('--mouse-x', `${Math.cos(angle) * distance}px`);
+                card.style.setProperty('--mouse-y', `${Math.sin(angle) * distance}px`);
+            });
+        });
+
+        // Theme toggle hint
+        const hintBox = document.createElement('div');
+        hintBox.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #a8a8a8;
+            font-family: 'IBM Plex Mono', monospace;
+            z-index: 100;
+        `;
+        hintBox.textContent = '// The Void watches. All is as intended.';
+        document.body.appendChild(hintBox);
+
+        // Easter egg
+        let secretCode = '';
+        document.addEventListener('keydown', (e) => {
+            secretCode += e.key.toLowerCase();
+            if (secretCode.includes('requiem')) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                setTimeout(() => {
+                    document.body.style.filter = 'hue-rotate(0deg)';
+                    secretCode = '';
+                }, 1000);
+            }
+            if (secretCode.length > 20) {
+                secretCode = secretCode.slice(-20);
+            }
+        });
+    </script>
+</body>
+</html>
+```

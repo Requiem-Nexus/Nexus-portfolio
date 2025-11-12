@@ -1,0 +1,185 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Requiem Nexus</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+        --void: #0a0a0a;
+        --grey: #1A1A1A;
+        --light-grey: #2a2a2a;
+        --accent: #00ff88;
+        --accent-dark: #00cc6a;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a8a8a8;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+        background: linear-gradient(135deg, var(--void) 0%, var(--grey) 50%, var(--void) 100%);
+        color: var(--text-primary);
+        font-family: 'Space Grotesk', sans-serif;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background:
+            radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(0, 255, 136, 0.02) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .content-wrapper { position: relative; z-index: 1; }
+
+    /* Navigation */
+    nav { backdrop-filter: blur(10px); background: rgba(26,26,26,0.5); border-bottom: 1px solid rgba(0,255,136,0.1); position: sticky; top:0; z-index:50; }
+    nav a { transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
+    nav a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--accent); transition:width 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    nav a:hover::after { width:100%; }
+
+    /* Section headers */
+    h2 { font-size: clamp(2rem,5vw,3rem); font-weight:700; margin-bottom:50px; position:relative; display:inline-block; }
+    h2::after { content:''; position:absolute; bottom:-10px; left:0; width:60%; height:3px; background: linear-gradient(90deg,var(--accent),transparent); border-radius:2px; }
+
+    /* Grid / Cards */
+    .identity-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+    .identity-card {
+        background: rgba(42,42,42,0.5);
+        border: 1px solid rgba(0,255,136,0.2);
+        padding: 28px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .identity-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(0,255,136,0.1) 0%, transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .identity-card:hover { border-color: rgba(0,255,136,0.5); transform: translateY(-8px); box-shadow:0 20px 40px rgba(0,255,136,0.15); }
+    .identity-card:hover::before { opacity:1; }
+    .identity-label { font-family:'IBM Plex Mono', monospace; font-size:0.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; }
+    .identity-value { font-size:1.5rem; font-weight:700; color:var(--text-primary); word-break:break-word; }
+
+    /* CTA Button */
+    .cta-button {
+        display: inline-block;
+        padding:14px 32px;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+        color: var(--void);
+        text-decoration: none;
+        font-weight:600;
+        border-radius:4px;
+        transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        border:2px solid var(--accent);
+        cursor:pointer;
+        font-family: 'Space Grotesk', sans-serif;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        font-size:0.9rem;
+    }
+    .cta-button:hover { transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,255,136,0.3); background:var(--void); color:var(--accent); }
+
+    /* Fade-in Animation */
+    .fade-in { opacity:0; animation: fadeInUp 0.8s ease-out forwards; }
+    .fade-in:nth-child(1){ animation-delay:0s; }
+    .fade-in:nth-child(2){ animation-delay:0.1s; }
+    .fade-in:nth-child(3){ animation-delay:0.2s; }
+    .fade-in:nth-child(4){ animation-delay:0.3s; }
+
+    @keyframes fadeInUp { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body>
+<div class="content-wrapper">
+
+    <!-- Navigation -->
+    <nav class="py-6 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="text-xl font-bold text-accent"><span style="color:#00ff88;">&lt;/RN&gt;</span></a>
+            <ul class="flex gap-8 text-sm font-medium">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="index.html#identity">IDENTITY</a></li>
+                <li><a href="about.html">ABOUT</a></li>
+                <li><a href="profile.html">PROFILE</a></li>
+                <li><a href="projects.html" class="text-accent">PROJECTS</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 max-w-7xl mx-auto px-6">
+        <h2>◇ SKILL SET & PROJECTS</h2>
+
+        <div class="identity-grid mt-10">
+            <div class="identity-card fade-in">
+                <div class="identity-label">Fifth POV</div>
+                <div class="identity-value">Wheel of the Void</div>
+                <div style="font-size:0.8rem;color:#a8a8a8;margin-top:8px;">Simulation & Infinite Possibilities</div>
+            </div>
+
+            <div class="identity-card fade-in">
+                <div class="identity-label">Music Creation</div>
+                <div class="identity-value">Tracks & Beats</div>
+                <div style="font-size:0.8rem;color:#a8a8a8;margin-top:8px;">Experimental, Dark, Futuristic</div>
+            </div>
+
+            <div class="identity-card fade-in">
+                <div class="identity-label">Meme Creation</div>
+                <div class="identity-value">Logic + Humor</div>
+                <div style="font-size:0.8rem;color:#a8a8a8;margin-top:8px;">Abstract, Recursive, Meta</div>
+            </div>
+
+            <div class="identity-card fade-in">
+                <div class="identity-label">Other Creations</div>
+                <div class="identity-value">Various Projects</div>
+                <div style="font-size:0.8rem;color:#a8a8a8;margin-top:8px;">Innovation Beyond Boundaries</div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16 text-center">
+            <a href="index.html#contact" class="cta-button">Connect / Collaborate</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border-top:1px solid rgba(0,255,136,0.1);padding:40px 20px;text-align:center;background:rgba(10,10,10,0.5);backdrop-filter:blur(10px);">
+        <div class="footer-content max-w-7xl mx-auto font-size:0.9rem;color:var(--text-secondary);">
+            </div>
+            <p>Requiem Nexus | Digital Strategist & Creator | Logic, Abstraction & Paradox</p>
+            <p style="margin-top:15px;font-size:0.8rem;color:#5a5a5a;">&copy; 2024 FIFTH PERSPECTIVE. All dimensions observed.</p>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    // Intersection Observer for fade-in
+    const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){entry.target.style.opacity='1';}
+        });
+    }, {threshold:0.1, rootMargin:'0px 0px -100px 0px'});
+    document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
