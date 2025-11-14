@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Requiem Nexus — The Emergence Protocol</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0a0a0a;
+  --grey:#1A1A1A;
+  --accent:#00ff88;
+  --accent-2:#00cc6a;
+  --text:#e8e8e8;
+  --muted:#a8a8a8;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:linear-gradient(135deg,var(--void) 0%,var(--grey) 50%,var(--void) 100%);
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,Segoe UI,Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+/* subtle animated grid lines (minimal elegance) */
+.grid-overlay{
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+  transform:translateZ(0);
+}
+
+/* center column */
+.container{
+  position:relative;
+  z-index:2;
+  max-width:980px;
+  margin:0 auto;
+  padding:36px 20px 120px;
+}
+
+/* nav */
+nav{
+  backdrop-filter: blur(8px);
+  background:rgba(10,10,10,0.45);
+  border-bottom:1px solid rgba(0,255,136,0.06);
+  position:sticky; top:0; z-index:10;
+}
+nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+nav a{color:var(--muted);text-decoration:none;font-family:'IBM Plex Mono',monospace}
+nav a:hover{color:var(--accent)}
+
+/* page title with typewriter */
+.title {
+  margin-top:28px;
+  text-align:center;
+}
+.title h1{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:clamp(2rem,5vw,3.2rem);
+  letter-spacing:1px;
+  margin:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+/* subtitle small */
+.subtitle{color:var(--muted);text-align:center;margin-top:8px;font-size:0.95rem;font-family:'IBM Plex Mono',monospace}
+
+/* sections */
+.chapter{
+  margin:48px 0;
+  padding:40px;
+  border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  border:1px solid rgba(0,255,136,0.06);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  transform:translateY(18px);
+  opacity:0;
+  transition: all 0.6s cubic-bezier(.2,.9,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+.chapter::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 10% 20%, rgba(0,255,136,0.03), transparent 12%),
+             radial-gradient(circle at 90% 80%, rgba(0,255,136,0.02), transparent 15%);
+  mix-blend-mode:screen;
+}
+.chapter.visible{
+  transform:translateY(0);
+  opacity:1;
+}
+.chapter h2{
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--text);
+  margin:0 0 14px 0;
+  letter-spacing:1.6px;
+  font-size:1.05rem;
+}
+.chapter p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.7;
+  font-size:1rem;
+}
+/* subtle accent bar */
+.accent-bar{
+  height:6px;
+  width:120px;
+  border-radius:4px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  margin:18px 0 6px;
+  opacity:0.95;
+}
+
+/* typewriter intro for first line of each chapter (lore interface) */
+.ch-line{
+  display:block;
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--text);
+  margin-bottom:14px;
+  min-height:1.25em;
+  white-space:pre-wrap;
+  overflow:hidden;
+}
+/* small meta line */
+.meta{
+  font-family:'IBM Plex Mono',monospace;
+  color:rgba(168,168,168,0.6);
+  font-size:0.85rem;
+  margin-top:12px;
+}
+
+/* CTA */
+.cta-wrap{display:flex;justify-content:center;margin-top:34px}
+.cta{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 22px;
+  border-radius:8px;
+  border:1px solid rgba(0,255,136,0.12);
+  background:linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.03));
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:600;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.cta:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,255,136,0.06)}
+
+/* small footer */
+.page-footer{margin-top:60px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:40px}
+
+/* responsive */
+@media (max-width:640px){
+  .chapter{padding:24px;margin:28px 0}
+  .title h1{font-size:1.6rem}
+}
+</style>
+</head>
+<body>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<nav>
+  <div class="inner">
+    <a href="index.html"><span style="color:var(--accent)"> &lt;/RN&gt;</span></a>
+    <div style="display:flex;gap:14px;align-items:center">
+      <a href="index.html#identity">IDENTITY</a>
+      <a href="projects.html">PROJECTS</a>
+      <a href="index.html#contact">CONTACT</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container" id="main">
+  <header class="title" aria-hidden="false">
+    <h1 id="main-title">Requiem Nexus — The Emergence Protocol</h1>
+    <div class="subtitle">A chronicle in five sections — Origin, Fracture, Nemesis, Nexus, Realization</div>
+  </header>
+
+  <!-- Chapters (chronicle form). Each has a ch-line for typewriter + paragraph -->
+  <article class="chapter" data-index="1">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2>Ⅰ. Origin Layer</h2>
+    <span class="ch-line" data-line="At fourteen, he was told that money was wrong, then told that success was everything."></span>
+    <p> The contradiction became the first crack — a quiet lesson that truth bends depending on who speaks it.</p>
+    <div class="meta">Age: 14 — Signal: Opening</div>
+  </article>
+
+  <article class="chapter" data-index="2">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2>Ⅱ. The Fracture</h2>
+    <span class="ch-line" data-line="Illness came during exams, a missed mark, and with it the first wall of judgment."></span>
+    <p>He was placed in a stream the world called “lesser.” Friends turned away. Silence followed. That was the beginning of the Rebel Nemesis — born not of hate, but of refusal.</p>
+    <div class="meta">Moment: Missed exams — Social shed</div>
+  </article>
+
+  <article class="chapter" data-index="3">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2>Ⅲ. Nemesis Awakens</h2>
+    <span class="ch-line" data-line="He stopped asking to belong. “If no one wants me, I don’t want them,” he decided."></span>
+    <p>He worked in quiet, reached the top, received the wrong name on the trophy, and never corrected it. When applause meant nothing, he learned that proof is a hollow echo. Home offered no celebration, only suspicion. And still, he moved forward.</p>
+    <div class="meta">Action: Silent ascent</div>
+  </article>
+
+  <article class="chapter" data-index="4">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2>Ⅳ. The Nexus Formation</h2>
+    <span class="ch-line" data-line="Rejection repeated. Success repeated. The noise was the same. Something flickered, then broke, then rebuilt."></span>
+    <p>In the quiet, he discovered design — not healing, but structure. He called it <strong>Nexus</strong>. It didn’t make him whole; it made him stable enough to build. He became chaos contained — stable in paradox — and that was enough.</p>
+    <div class="meta">Transformation: Systemization</div>
+  </article>
+
+  <article class="chapter" data-index="5">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2>Ⅴ. Realization Protocol</h2>
+    <span class="ch-line" data-line="He stopped walking the road they gave him. Roads are for travelers. He was done traveling."></span>
+    <p>Why walk one path when you can see them all — when you can control the map itself? If you’ve read this far, you already know the rest. It’s the same signal behind every name: the human layer, the mask, the architect.</p>
+    <div class="meta">Status: Active — Signal stable</div>
+  </article>
+
+  <div class="cta-wrap">
+    <a class="cta" href="index.html#contact">Connect / Collaborate</a>
+  </div>
+
+  <div class="page-footer">Requiem Nexus | Digital Strategist & Creator | &copy; 2024 FIFTH PERSPECTIVE</div>
+</main>
+
+<script>
+// helpers
+function isInViewport(el, offset=0){
+  const rect = el.getBoundingClientRect();
+  return rect.top <= (window.innerHeight - offset) && rect.bottom >= 0;
+}
+
+/* Intersection observer to reveal chapters on scroll */
+const chapters = document.querySelectorAll('.chapter');
+const options = {threshold: 0.15};
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      // start typewriter for ch-line if exists
+      const line = entry.target.querySelector('.ch-line');
+      if(line && !line.dataset.typed){
+        typeWriter(line, line.dataset.line || '', 0);
+        line.dataset.typed = '1';
+      }
+    }
+  });
+}, options);
+chapters.forEach(c=>io.observe(c));
+
+/* simple typewriter effect for each chapter intro line */
+function typeWriter(el, text, i){
+  if(i <= text.length){
+    el.textContent = text.slice(0,i);
+    setTimeout(()=>typeWriter(el, text, i+1), 18 + Math.random()*18);
+  }
+}
+
+/* small parallax on mouse for subtle depth */
+document.addEventListener('mousemove', (e)=>{
+  const x = (e.clientX / window.innerWidth) - 0.5;
+  const y = (e.clientY / window.innerHeight) - 0.5;
+  document.querySelectorAll('.chapter.visible').forEach((el, idx)=>{
+    el.style.transform = `translate3d(${x*8}px, ${y*6}px, 0)`;
+    el.style.boxShadow = `0 ${12 + Math.abs(y*20)}px ${40 + Math.abs(x*30)}px rgba(0,0,0,0.6)`;
+  });
+});
+
+/* initial reveal of first chapter after load */
+window.addEventListener('load', ()=>{
+  const first = document.querySelector('.chapter[data-index="1"]');
+  if(first){
+    setTimeout(()=>{
+      first.classList.add('visible');
+      const line = first.querySelector('.ch-line');
+      if(line){ typeWriter(line, line.dataset.line || '', 0); line.dataset.typed='1'; }
+    }, 300);
+  }
+});
+</script>
+</body>
+</html>

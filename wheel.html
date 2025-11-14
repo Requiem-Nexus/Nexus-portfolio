@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Wheel of the Void — Requiem Nexus</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0a0a0a;
+  --grey:#1A1A1A;
+  --accent:#00ff88;
+  --accent-2:#00cc6a;
+  --muted:#a8a8a8;
+  --glass: rgba(42,42,42,0.45);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:'Space Grotesk',system-ui,Segoe UI,Arial;
+  background:linear-gradient(135deg,var(--void) 0%, var(--grey) 50%, var(--void) 100%);
+  color:#e8e8e8;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+/* background subtle grid */
+.grid-overlay{
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events:none;
+  z-index:0;
+  opacity:0.5;
+}
+
+/* nav */
+nav{
+  backdrop-filter: blur(8px);
+  background: rgba(10,10,10,0.45);
+  border-bottom:1px solid rgba(0,255,136,0.06);
+  position:sticky; top:0; z-index:20;
+}
+nav .inner{max-width:1200px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+nav a{color:var(--muted);text-decoration:none;font-family:'IBM Plex Mono',monospace}
+nav a:hover{color:var(--accent)}
+
+/* main layout */
+.wrapper{position:relative;z-index:2;max-width:1200px;margin:36px auto;padding:20px;display:grid;grid-template-columns: 1fr 420px;gap:28px;align-items:start}
+@media (max-width:980px){ .wrapper{grid-template-columns:1fr; padding-bottom:80px} }
+
+/* wheel card */
+.wheel-card{
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+  border:1px solid rgba(0,255,136,0.06);
+  padding:28px;
+  border-radius:12px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  position:relative;
+  overflow:visible;
+}
+.wheel-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.wheel-title{font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:1px;color:transparent;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text}
+.wheel-sub{color:var(--muted);font-size:0.95rem;font-family:'IBM Plex Mono',monospace}
+
+/* svg wheel center */
+.wheel-wrap{display:flex;justify-content:center;align-items:center;padding:12px}
+svg {width:560px;max-width:100%;height:auto;display:block;}
+
+/* sector hover */
+.slice{cursor:pointer;transition:transform 0.28s cubic-bezier(.2,.9,.2,1);transform-origin:center}
+.slice:hover{transform:scale(1.04);filter:drop-shadow(0 8px 24px rgba(0,255,136,0.08))}
+
+/* center badge */
+.center-badge{
+  position:absolute; left:50%; transform:translateX(-50%); top:50px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.badge{
+  background:linear-gradient(135deg, rgba(0,255,136,0.12), rgba(0,255,136,0.06));
+  border:1px solid rgba(0,255,136,0.14);
+  padding:10px 16px;border-radius:999px;font-family:'IBM Plex Mono',monospace;color:var(--accent);
+  backdrop-filter:blur(6px);
+  box-shadow:0 12px 30px rgba(0,0,0,0.6);
+}
+
+/* panel (right side) */
+.panel{
+  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  border:1px solid rgba(0,255,136,0.06);
+  padding:20px;border-radius:12px;backdrop-filter:blur(8px);
+  height: 100%;
+  min-height:360px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.panel h3{font-family:'IBM Plex Mono',monospace;margin:6px 0;color:var(--accent)}
+.panel p{color:var(--muted);line-height:1.7}
+.panel .law-slot{background:rgba(0,0,0,0.08);padding:12px;border-radius:8px;border:1px solid rgba(0,255,136,0.04)}
+.panel .meta{font-family:'IBM Plex Mono',monospace;color:rgba(168,168,168,0.7);font-size:0.85rem;margin-top:auto}
+
+/* small controls */
+.controls{display:flex;gap:10px;align-items:center}
+.icon-btn{padding:8px;border-radius:8px;border:1px solid rgba(0,255,136,0.06);background:transparent;color:var(--muted);cursor:pointer}
+.icon-btn:hover{color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,255,136,0.06)}
+
+/* wheel spin animation helper */
+.spin-wrap{transition: transform 1.2s cubic-bezier(.22,.9,.28,1);will-change:transform}
+
+/* legend below */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.legend .dot{width:10px;height:10px;border-radius:2px;background:var(--accent);box-shadow:0 8px 20px rgba(0,255,136,0.05)}
+
+/* footer small */
+.footer{margin-top:26px;color:var(--muted);font-size:0.9rem;text-align:center}
+
+/* small responsive tweaks */
+@media (max-width:560px){
+  .panel{min-height:240px}
+  .center-badge{position:static;transform:none;margin-top:8px}
+}
+</style>
+</head>
+<body>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<nav>
+  <div class="inner">
+    <a href="index.html"><span style="color:var(--accent)">&lt;/RN&gt;</span></a>
+    <div style="display:flex;gap:14px;align-items:center">
+      <a href="index.html#identity">IDENTITY</a>
+      <a href="projects.html">PROJECTS</a>
+      <a href="profile.html">PROFILE</a>
+    </div>
+  </div>
+</nav>
+
+<main class="wrapper" id="app">
+  <section class="wheel-card" aria-labelledby="wheel-title">
+    <div class="wheel-header">
+      <div>
+        <div id="wheel-title" class="wheel-title">Wheel of the Void</div>
+        <div class="wheel-sub">Framework Initialization — 12 Laws (click a sector)</div>
+      </div>
+      <div class="controls">
+        <button id="spinBtn" class="icon-btn" title="Spin the wheel">Spin</button>
+        <button id="randomBtn" class="icon-btn" title="Random law">Random</button>
+      </div>
+    </div>
+
+    <div class="wheel-wrap" role="img" aria-label="Wheel of the Void">
+      <!-- SVG wheel with 12 slices -->
+      <div style="position:relative;">
+        <svg viewBox="-260 -260 520 520" id="wheelSVG">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00ff88"/><stop offset="1" stop-color="#00cc6a"/></linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="6" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+
+          <g id="wheelGroup" class="spin-wrap">
+            <!-- create 12 slices -->
+          </g>
+
+          <!-- center circle label -->
+          <circle cx="0" cy="0" r="56" fill="rgba(10,10,10,0.6)" stroke="rgba(0,255,136,0.12)" stroke-width="2"></circle>
+          <text x="0" y="-6" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#00ff88">FIFTH POV</text>
+          <text x="0" y="12" text-anchor="middle" font-family="Space Grotesk" font-size="8" fill="#a8a8a8">WHEEL OF THE VOID</text>
+        </svg>
+
+        <div class="center-badge" style="pointer-events:none;">
+          <div class="badge">◆ ACTIVE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend" aria-hidden="true">
+      <div class="dot"></div><div>12 Laws • Click a sector to reveal</div>
+    </div>
+
+    <div class="footer">Tip: press <kbd>Space</kbd> to spin • Use arrows to navigate</div>
+  </section>
+
+  <aside class="panel" aria-live="polite">
+    <h3 id="lawTitle">Law # — Awaiting selection</h3>
+    <div class="law-slot" id="lawContent">
+      <p style="margin:0;color:var(--muted)">Click any sector on the wheel to reveal a law slot. Each slot contains the law name and a short description. You can replace placeholder text with your final law content anytime.</p>
+    </div>
+    <div class="meta">Status: Framework initialized • Editable</div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <a class="cta" href="index.html#contact" style="text-decoration:none;padding:10px 14px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07110a;font-weight:700;display:inline-block">Contact</a>
+      <button id="resetBtn" class="icon-btn" title="Reset selection">Reset</button>
+    </div>
+  </aside>
+</main>
+
+<script>
+/* Data: 12 law placeholders (you can update these later) */
+const laws = [
+  {id:1, name:'Paradox', short:'Embrace contradiction as information.'},
+  {id:2, name:'Choice', short:'Every action collapses possible states.'},
+  {id:3, name:'Self', short:'Your identity is layered; observe each layer.'},
+  {id:4, name:'Situation', short:'Context defines meaning more than intent.'},
+  {id:5, name:'Psychology', short:'Map emotions as signals, not flaws.'},
+  {id:6, name:'Hue', short:'Calibrate status; color your signal intentionally.'},
+  {id:7, name:'Status', short:'Maintain operational integrity; visible or not.'},
+  {id:8, name:'Brain', short:'Simulation over reaction; run the model.'},
+  {id:9, name:'Time', short:'Scale your moves across horizons.'},
+  {id:10, name:'Reflection', short:'After-effect is data; archive it.'},
+  {id:11, name:'Void', short:'Recognize the uncounted law that shapes outcomes.'},
+  {id:12, name:'After-Effect', short:'Everything echoes; design for echo.'}
+];
+
+/* build wheel slices dynamically */
+const wheelGroup = document.getElementById('wheelGroup');
+const total = laws.length;
+const radius = 200;
+for(let i=0;i<total;i++){
+  const start = (i/total) * Math.PI*2 - Math.PI/2;
+  const end = ((i+1)/total) * Math.PI*2 - Math.PI/2;
+  const x1 = Math.cos(start)*radius, y1 = Math.sin(start)*radius;
+  const x2 = Math.cos(end)*radius, y2 = Math.sin(end)*radius;
+  const large = 0;
+  // path for sector
+  const d = `M 0 0 L ${x1} ${y1} A ${radius} ${radius} 0 ${large} 1 ${x2} ${y2} Z`;
+  const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+  path.setAttribute('d',d);
+  path.setAttribute('fill', i%2===0 ? 'rgba(0,255,136,0.04)' : 'rgba(0,255,136,0.02)');
+  path.setAttribute('class','slice');
+  path.setAttribute('data-index', i);
+  path.setAttribute('stroke','rgba(0,255,136,0.06)');
+  path.setAttribute('stroke-width','1');
+  // label
+  const mid = (start+end)/2;
+  const lx = Math.cos(mid)*(radius*0.64);
+  const ly = Math.sin(mid)*(radius*0.64);
+  const txt = document.createElementNS("http://www.w3.org/2000/svg","text");
+  txt.setAttribute('x', lx);
+  txt.setAttribute('y', ly+4);
+  txt.setAttribute('text-anchor','middle');
+  txt.setAttribute('font-family','IBM Plex Mono');
+  txt.setAttribute('font-size','10');
+  txt.setAttribute('fill','#a8a8a8');
+  txt.textContent = laws[i].name;
+  // add event
+  path.addEventListener('click', (e)=> selectLaw(i));
+  txt.addEventListener('click', (e)=> selectLaw(i));
+  wheelGroup.appendChild(path);
+  wheelGroup.appendChild(txt);
+}
+
+/* UI handlers */
+const lawTitle = document.getElementById('lawTitle');
+const lawContent = document.getElementById('lawContent');
+const spinBtn = document.getElementById('spinBtn');
+const randomBtn = document.getElementById('randomBtn');
+const resetBtn = document.getElementById('resetBtn');
+const wheelSvg = document.getElementById('wheelSVG');
+const wheelWrap = document.querySelector('.spin-wrap');
+let currentIndex = null;
+let rotation = 0;
+
+function selectLaw(i, triggerSpin=false){
+  currentIndex = i;
+  const law = laws[i];
+  lawTitle.textContent = `Law ${law.id}: ${law.name}`;
+  lawContent.innerHTML = `<p style="margin:0;color:var(--muted)">${law.short}</p>`;
+  // bring clicked slice to top visually by rotating wheel so that slice centers at top
+  const anglePer = 360 / total;
+  const targetAngle = - (i * anglePer) - (anglePer/2);
+  rotation = (rotation % 360) + (360*2) + targetAngle; // spin multiple rounds then land
+  wheelWrap.style.transition = 'transform 1s cubic-bezier(.22,.9,.28,1)';
+  wheelWrap.style.transform = `rotate(${rotation}deg)`;
+  // highlight selected text briefly
+  flashSelected(i);
+}
+
+function flashSelected(i){
+  // simple visual flash: temporarily change slice fill
+  const slices = document.querySelectorAll('.slice');
+  slices.forEach(s=> s.setAttribute('fill', 'rgba(0,255,136,0.02)'));
+  const s = slices[i];
+  if(s) s.setAttribute('fill','rgba(0,255,136,0.09)');
+  setTimeout(()=>{ if(s) s.setAttribute('fill','rgba(0,255,136,0.04)'); }, 900);
+}
+
+spinBtn.addEventListener('click', ()=>{
+  // spin random
+  const r = Math.floor(Math.random()*total);
+  selectLaw(r, true);
+});
+randomBtn.addEventListener('click', ()=>{
+  const r = Math.floor(Math.random()*total);
+  selectLaw(r, true);
+});
+resetBtn.addEventListener('click', ()=>{
+  currentIndex = null;
+  lawTitle.textContent = 'Law # — Awaiting selection';
+  lawContent.innerHTML = `<p style="margin:0;color:var(--muted)">Click any sector on the wheel to reveal a law slot. Each slot contains the law name and a short description. You can replace placeholder text with your final law content anytime.</p>`;
+  rotation = 0;
+  wheelWrap.style.transition = 'transform 0.6s ease';
+  wheelWrap.style.transform = `rotate(0deg)`;
+});
+
+/* keyboard handling */
+document.addEventListener('keydown',(e)=>{
+  if(e.code === 'Space'){ e.preventDefault(); spinBtn.click(); }
+  if(e.key === 'ArrowRight'){ // next law
+    let next = (currentIndex === null) ? 0 : (currentIndex+1) % total;
+    selectLaw(next);
+  }
+  if(e.key === 'ArrowLeft'){
+    let prev = (currentIndex === null) ? total-1 : (currentIndex-1+total) % total;
+    selectLaw(prev);
+  }
+});
+
+/* accessibility: announce changes */
+const panel = document.querySelector('.panel');
+const obs = new MutationObserver(()=>{ panel.setAttribute('aria-live','polite'); });
+obs.observe(lawContent,{childList:true,subtree:true});
+
+/* initial minor tilt */
+document.addEventListener('mousemove', (ev)=>{
+  const x = (ev.clientX / window.innerWidth) - 0.5;
+  const y = (ev.clientY / window.innerHeight) - 0.5;
+  document.querySelectorAll('.wheel-card, .panel').forEach(el=>{
+    el.style.transform = `translate3d(${x*6}px, ${y*4}px,0)`;
+  });
+});
+</script>
+</body>
+</html>
