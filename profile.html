@@ -3,200 +3,97 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Requiem Nexus — The Emergence Protocol</title>
+<title>Requiem Nexus — Emergence OS</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --void:#0a0a0a;
-  --grey:#1A1A1A;
-  --accent:#00ff88;
-  --accent-2:#00cc6a;
-  --text:#e8e8e8;
-  --muted:#a8a8a8;
-}
+:root{--void:#050505;--grey:#1A1A1A;--accent:#00ff88;--accent-2:#00cc6a;--text:#e8e8e8;--muted:#a8a8a8}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{
-  margin:0;
-  background:linear-gradient(135deg,var(--void) 0%,var(--grey) 50%,var(--void) 100%);
-  color:var(--text);
-  font-family:'Space Grotesk',system-ui,Segoe UI,Arial;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  overflow-x:hidden;
-}
-
-/* subtle animated grid lines (minimal elegance) */
-.grid-overlay{
-  position:fixed;
-  inset:0;
-  background-image:
-    linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events:none;
-  z-index:0;
-  opacity:0.6;
-  transform:translateZ(0);
-}
-
-/* center column */
-.container{
-  position:relative;
-  z-index:2;
-  max-width:980px;
-  margin:0 auto;
-  padding:36px 20px 120px;
-}
-
-/* nav */
-nav{
-  backdrop-filter: blur(8px);
-  background:rgba(10,10,10,0.45);
-  border-bottom:1px solid rgba(0,255,136,0.06);
-  position:sticky; top:0; z-index:10;
-}
-nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+body{margin:0;background:linear-gradient(135deg,var(--void) 0%,var(--grey) 50%,var(--void) 100%);color:var(--text);font-family:'Space Grotesk',system-ui,Segoe UI,Arial;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.grid-overlay{position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,136,0.02) 1px, transparent 1px),linear-gradient(90deg, rgba(0,255,136,0.02) 1px, transparent 1px);background-size: 60px 60px;pointer-events:none;z-index:0;opacity:0.6;transform:translateZ(0)}
+#preloader{position:fixed;inset:0;background:linear-gradient(180deg, rgba(5,5,5,0.95), rgba(10,10,10,0.9));z-index:60;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px}
+#preloader .line{font-family:'IBM Plex Mono',monospace;color:var(--muted);letter-spacing:0.8px}
+#preloader .progress{height:8px;width:320px;border-radius:6px;background:rgba(255,255,255,0.03);overflow:hidden}
+#preloader .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .3s ease}
+nav{backdrop-filter: blur(6px);background:rgba(10,10,10,0.45);border-bottom:1px solid rgba(0,255,136,0.06);position:sticky;top:0;z-index:20}
+nav .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 20px}
 nav a{color:var(--muted);text-decoration:none;font-family:'IBM Plex Mono',monospace}
-nav a:hover{color:var(--accent)}
-
-/* page title with typewriter */
-.title {
-  margin-top:28px;
-  text-align:center;
-}
-.title h1{
-  font-family:'IBM Plex Mono',monospace;
-  font-size:clamp(2rem,5vw,3.2rem);
-  letter-spacing:1px;
-  margin:0;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-/* subtitle small */
-.subtitle{color:var(--muted);text-align:center;margin-top:8px;font-size:0.95rem;font-family:'IBM Plex Mono',monospace}
-
-/* sections */
-.chapter{
-  margin:48px 0;
-  padding:40px;
-  border-radius:12px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-  border:1px solid rgba(0,255,136,0.06);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-  transform:translateY(18px);
-  opacity:0;
-  transition: all 0.6s cubic-bezier(.2,.9,.2,1);
-  position:relative;
-  overflow:hidden;
-}
-.chapter::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:radial-gradient(circle at 10% 20%, rgba(0,255,136,0.03), transparent 12%),
-             radial-gradient(circle at 90% 80%, rgba(0,255,136,0.02), transparent 15%);
-  mix-blend-mode:screen;
-}
-.chapter.visible{
-  transform:translateY(0);
-  opacity:1;
-}
-.chapter h2{
-  font-family:'IBM Plex Mono',monospace;
-  color:var(--text);
-  margin:0 0 14px 0;
-  letter-spacing:1.6px;
-  font-size:1.05rem;
-}
-.chapter p{
-  margin:0;
-  color:var(--muted);
-  line-height:1.7;
-  font-size:1rem;
-}
-/* subtle accent bar */
-.accent-bar{
-  height:6px;
-  width:120px;
-  border-radius:4px;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2));
-  margin:18px 0 6px;
-  opacity:0.95;
-}
-
-/* typewriter intro for first line of each chapter (lore interface) */
-.ch-line{
-  display:block;
-  font-family:'IBM Plex Mono',monospace;
-  color:var(--text);
-  margin-bottom:14px;
-  min-height:1.25em;
-  white-space:pre-wrap;
-  overflow:hidden;
-}
-/* small meta line */
-.meta{
-  font-family:'IBM Plex Mono',monospace;
-  color:rgba(168,168,168,0.6);
-  font-size:0.85rem;
-  margin-top:12px;
-}
-
-/* CTA */
+.container{position:relative;z-index:5;max-width:1080px;margin:0 auto;padding:36px 20px 120px}
+.title{margin-top:28px;text-align:center}
+.title h1{font-family:'IBM Plex Mono',monospace;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:1px;margin:0;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;position:relative}
+.title .subtitle{color:var(--muted);text-align:center;margin-top:8px;font-size:0.95rem;font-family:'IBM Plex Mono',monospace}
+#title-canvas{position:absolute;left:50%;transform:translateX(-50%);top:-12px;z-index:-1;pointer-events:none}
+.chapter{margin:48px 0;padding:40px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(0,255,136,0.06);box-shadow: 0 8px 30px rgba(0,0,0,0.6);transform:translateY(18px);opacity:0;transition: all 0.6s cubic-bezier(.2,.9,.2,1);position:relative;overflow:hidden}
+.chapter.visible{transform:translateY(0);opacity:1}
+.chapter h2{font-family:'IBM Plex Mono',monospace;color:var(--text);margin:0 0 14px 0;letter-spacing:1.6px;font-size:1.05rem}
+.chapter p{margin:0;color:var(--muted);line-height:1.7;font-size:1rem}
+.accent-bar{height:6px;width:120px;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent-2));margin:18px 0 6px;opacity:0.95}
+.ch-line{display:block;font-family:'IBM Plex Mono',monospace;color:var(--text);margin-bottom:14px;min-height:1.25em;white-space:pre-wrap;overflow:hidden}
+.meta{font-family:'IBM Plex Mono',monospace;color:rgba(168,168,168,0.6);font-size:0.85rem;margin-top:12px}
 .cta-wrap{display:flex;justify-content:center;margin-top:34px}
-.cta{
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 22px;
-  border-radius:8px;
-  border:1px solid rgba(0,255,136,0.12);
-  background:linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.03));
-  color:var(--accent);
-  text-decoration:none;
-  font-weight:600;
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-.cta:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,255,136,0.06)}
-
-/* small footer */
-.page-footer{margin-top:60px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:40px}
-
-/* responsive */
-@media (max-width:640px){
-  .chapter{padding:24px;margin:28px 0}
-  .title h1{font-size:1.6rem}
-}
+.cta{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border-radius:8px;border:1px solid rgba(0,255,136,0.12);background:linear-gradient(135deg, rgba(0,255,136,0.08), rgba(0,255,136,0.03));color:var(--accent);text-decoration:none;font-weight:600;transition:transform .2s ease, box-shadow .2s ease}
+.hud{position:fixed;right:14px;top:80px;z-index:40;display:flex;flex-direction:column;gap:10px;font-family:'IBM Plex Mono',monospace}
+.hud .card{background:rgba(5,5,5,0.6);border:1px solid rgba(0,255,136,0.06);padding:10px 12px;border-radius:8px;color:var(--muted);min-width:140px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:18px}
+.card-flip{perspective:1200px}
+.card-inner{position:relative;width:100%;height:260px;transform-style:preserve-3d;transition:transform 0.8s cubic-bezier(.2,.9,.2,1);border-radius:12px}
+.card-front,.card-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;padding:18px;display:flex;flex-direction:column;justify-content:center}
+.card-front{background:linear-gradient(180deg, rgba(0,255,136,0.04), rgba(0,255,136,0.02));border:1px solid rgba(0,255,136,0.06)}
+.card-back{transform:rotateY(180deg);background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(0,255,136,0.04)}
+.card-flip:hover .card-inner{transform:rotateY(180deg)}
+#terminal{position:fixed;left:18px;bottom:18px;width:420px;max-width:calc(100vw - 36px);z-index:45;background:rgba(2,2,2,0.85);border:1px solid rgba(0,255,136,0.06);padding:12px;border-radius:10px;font-family:'IBM Plex Mono',monospace;color:var(--muted);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+#terminal .output{height:60px;overflow:auto;white-space:pre-wrap;font-size:0.92rem}
+#terminal .input{display:flex;gap:8px;margin-top:8px}
+#terminal input{flex:1;background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:6px;color:var(--text)}
+#skill-graph{width:100%;height:320px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));border:1px solid rgba(0,255,136,0.04);display:flex;align-items:center;justify-content:center}
+#nexus-pulse{position:fixed;left:18px;top:18px;width:72px;height:72px;border-radius:999px;display:flex;align-items:center;justify-content:center;z-index:45}
+#nexus-pulse .dot{width:18px;height:18px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));box-shadow:0 6px 30px rgba(0,255,136,0.06)}
+.void-waves{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.06}
+@media (max-width:720px){#terminal{position:static;border-radius:8px;margin-top:18px}#nexus-pulse{left:10px;top:80px}}
 </style>
 </head>
 <body>
 <div class="grid-overlay" aria-hidden="true"></div>
-
-<nav>
-  <div class="inner">
-    <a href="index.html"><span style="color:var(--accent)"> &lt;/RN&gt;</span></a>
-    <div style="display:flex;gap:14px;align-items:center">
-      <a href="index.html#identity">IDENTITY</a>
-      <a href="projects.html">PROJECTS</a>
-      <a href="index.html#contact">CONTACT</a>
-    </div>
+<svg class="void-waves" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true">
+  <defs>
+    <filter id="noise"><feTurbulence baseFrequency="0.8" numOctaves="1" stitchTiles="stitch"/></filter>
+  </defs>
+  <rect width="100%" height="100%" filter="url(#noise)" fill="black" opacity="0.03"></rect>
+</svg>
+<div id="preloader" role="status" aria-live="polite">
+  <div style="text-align:center">
+    <div style="font-family:'IBM Plex Mono',monospace;color:var(--accent);font-weight:700;font-size:1.1rem">Initializing Requiem Nexus — Emergence OS</div>
+    <div class="line" style="margin-top:8px">Booting modules...</div>
   </div>
-</nav>
-
+  <div class="progress"><i id="pre-progress"></i></div>
+  <div class="line" id="pre-msg">Decrypting Chronicle Modules…</div>
+</div>
+<div class="hud" aria-hidden="false">
+  <div class="card">Signal: <strong id="signal">STABLE</strong></div>
+  <div class="card">Load: <span id="load">12%</span></div>
+  <div class="card">POV: <em>Fifth</em></div>
+</div>
+<div id="terminal" aria-hidden="false">
+  <div class="output" id="term-output">&gt; welcome. type `help` for commands.
+</div>
+  <div class="input"><input id="term-input" placeholder="run nexus.protocol --reveal" aria-label="terminal input"><button id="term-run" class="cta" style="padding:6px 10px;">run</button></div>
+</div>
 <main class="container" id="main">
   <header class="title" aria-hidden="false">
-    <h1 id="main-title">Requiem Nexus — The Emergence Protocol</h1>
+    <div style="position:relative;display:inline-block">
+      <canvas id="title-canvas" width="760" height="160" aria-hidden="true"></canvas>
+      <h1 id="main-title">Requiem Nexus — The Emergence Protocol</h1>
+    </div>
     <div class="subtitle">A chronicle in five sections — Origin, Fracture, Nemesis, Nexus, Realization</div>
   </header>
-
-  <!-- Chapters (chronicle form). Each has a ch-line for typewriter + paragraph -->
+  <section style="margin-top:28px">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2 style="font-family:'IBM Plex Mono',monospace">Identity Layers</h2>
+    <div class="cards" id="identity-cards"></div>
+  </section>
   <article class="chapter" data-index="1">
     <div class="accent-bar" aria-hidden="true"></div>
     <h2>Ⅰ. Origin Layer</h2>
@@ -204,7 +101,6 @@ nav a:hover{color:var(--accent)}
     <p> The contradiction became the first crack — a quiet lesson that truth bends depending on who speaks it.</p>
     <div class="meta">Age: 14 — Signal: Opening</div>
   </article>
-
   <article class="chapter" data-index="2">
     <div class="accent-bar" aria-hidden="true"></div>
     <h2>Ⅱ. The Fracture</h2>
@@ -212,7 +108,6 @@ nav a:hover{color:var(--accent)}
     <p>He was placed in a stream the world called “lesser.” Friends turned away. Silence followed. That was the beginning of the Rebel Nemesis — born not of hate, but of refusal.</p>
     <div class="meta">Moment: Missed exams — Social shed</div>
   </article>
-
   <article class="chapter" data-index="3">
     <div class="accent-bar" aria-hidden="true"></div>
     <h2>Ⅲ. Nemesis Awakens</h2>
@@ -220,7 +115,6 @@ nav a:hover{color:var(--accent)}
     <p>He worked in quiet, reached the top, received the wrong name on the trophy, and never corrected it. When applause meant nothing, he learned that proof is a hollow echo. Home offered no celebration, only suspicion. And still, he moved forward.</p>
     <div class="meta">Action: Silent ascent</div>
   </article>
-
   <article class="chapter" data-index="4">
     <div class="accent-bar" aria-hidden="true"></div>
     <h2>Ⅳ. The Nexus Formation</h2>
@@ -228,7 +122,6 @@ nav a:hover{color:var(--accent)}
     <p>In the quiet, he discovered design — not healing, but structure. He called it <strong>Nexus</strong>. It didn’t make him whole; it made him stable enough to build. He became chaos contained — stable in paradox — and that was enough.</p>
     <div class="meta">Transformation: Systemization</div>
   </article>
-
   <article class="chapter" data-index="5">
     <div class="accent-bar" aria-hidden="true"></div>
     <h2>Ⅴ. Realization Protocol</h2>
@@ -236,67 +129,189 @@ nav a:hover{color:var(--accent)}
     <p>Why walk one path when you can see them all — when you can control the map itself? If you’ve read this far, you already know the rest. It’s the same signal behind every name: the human layer, the mask, the architect.</p>
     <div class="meta">Status: Active — Signal stable</div>
   </article>
-
-  <div class="cta-wrap">
-    <a class="cta" href="index.html#contact">Connect / Collaborate</a>
-  </div>
-
-  <div class="page-footer">Requiem Nexus | Digital Strategist & Creator | &copy; 2024 FIFTH PERSPECTIVE</div>
+  <section style="margin-top:28px">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <h2 style="font-family:'IBM Plex Mono',monospace">Interactive Skill Graph</h2>
+    <div id="skill-graph" aria-hidden="false"><canvas id="skill-canvas" width="960" height="320"></canvas></div>
+  </section>
+  <div class="cta-wrap"><a class="cta" href="index.html">Connect / Collaborate</a></div>
+  <div class="page-footer" style="margin-top:60px;text-align:center;color:var(--muted);font-size:0.9rem;padding-bottom:40px">Requiem Nexus | Digital Strategist & Creator | &copy; 2024 FIFTH PERSPECTIVE</div>
 </main>
-
 <script>
-// helpers
-function isInViewport(el, offset=0){
-  const rect = el.getBoundingClientRect();
-  return rect.top <= (window.innerHeight - offset) && rect.bottom >= 0;
+const pre = document.getElementById('preloader');
+const preProgress = document.getElementById('pre-progress');
+const preMsg = document.getElementById('pre-msg');
+let prog = 0;
+const steps = ['Decrypting Chronicle Modules…','Initializing Particle Kernel…','Stabilizing HUD Systems…','Locking Identity Layers…','Engaging Emergence Protocol…'];
+function runPre(){
+  const t = setInterval(()=>{
+    prog = Math.min(100, prog + 8);
+    if(preProgress) preProgress.style.width = prog + '%';
+    const idx = Math.min(steps.length - 1, Math.floor(prog / 20));
+    if(preMsg) preMsg.textContent = steps[idx];
+    if(prog >= 100){
+      clearInterval(t);
+      if(pre){ pre.style.opacity = '0'; pre.style.pointerEvents = 'none'; setTimeout(()=>{ if(pre && pre.parentNode) pre.parentNode.removeChild(pre); initAfterLoad(); }, 600); }
+    }
+  }, 180);
+}
+runPre();
+
+/* Title particle field */
+const tCanvas = document.getElementById('title-canvas');
+const tCtx = tCanvas && tCanvas.getContext ? tCanvas.getContext('2d') : null;
+let particles = [];
+const TP = 60;
+function initParticles(){
+  particles = [];
+  const w = tCanvas ? tCanvas.width : 760;
+  const h = tCanvas ? tCanvas.height : 160;
+  for(let i=0;i<TP;i++) particles.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.2,vy:(Math.random()-0.5)*0.2,r:0.6+Math.random()*1.6});
+}
+function resizeTC(){
+  if(!tCanvas) return;
+  tCanvas.width = Math.min(960, Math.max(360, window.innerWidth * 0.9));
+  tCanvas.height = 160;
+  initParticles();
+}
+window.addEventListener('resize', resizeTC);
+resizeTC();
+function drawParticles(){
+  if(!tCtx) return;
+  tCtx.clearRect(0,0,tCanvas.width,tCanvas.height);
+  tCtx.globalCompositeOperation = 'lighter';
+  for(const p of particles){
+    p.x += p.vx; p.y += p.vy;
+    if(p.x < 0) p.x = tCanvas.width;
+    if(p.x > tCanvas.width) p.x = 0;
+    if(p.y < 0) p.y = tCanvas.height;
+    if(p.y > tCanvas.height) p.y = 0;
+    tCtx.beginPath(); tCtx.fillStyle = 'rgba(0,255,136,0.12)'; tCtx.arc(p.x,p.y,p.r,0,Math.PI*2); tCtx.fill();
+  }
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const a = particles[i], b = particles[j];
+      const dx = a.x - b.x, dy = a.y - b.y;
+      const d = Math.hypot(dx,dy);
+      if(d < 60){
+        tCtx.strokeStyle = 'rgba(0,255,136,' + (0.06 * (1 - d/60)) + ')';
+        tCtx.lineWidth = 0.6;
+        tCtx.beginPath(); tCtx.moveTo(a.x,a.y); tCtx.lineTo(b.x,b.y); tCtx.stroke();
+      }
+    }
+  }
+  tCtx.globalCompositeOperation = 'source-over';
+}
+function animateTitle(){ drawParticles(); requestAnimationFrame(animateTitle); }
+animateTitle();
+
+/* Identity cards */
+const identities = [
+  {name:'Freak',role:'Core',desc:'Emotional layer; mask and raw signal.'},
+  {name:'Nemesis',role:'Defense',desc:'Protective edge — silent retribution.'},
+  {name:'Nexus',role:'Architect',desc:'Systems, design, stability.'},
+  {name:'Requiem',role:'Singularity',desc:'Aspiration, outer future-state.'},
+  {name:'EchoGPT',role:'Observer',desc:'Witness; feedback layer.'}
+];
+const cardsEl = document.getElementById('identity-cards');
+if(cardsEl){
+  identities.forEach(id=>{
+    const wrap = document.createElement('div'); wrap.className = 'card-flip';
+    const inner = document.createElement('div'); inner.className = 'card-inner';
+    const front = document.createElement('div'); front.className = 'card-front';
+    front.innerHTML = `<div style="font-family:'IBM Plex Mono';font-weight:700;font-size:1.05rem;color:var(--accent)">${id.name}</div><div style="margin-top:8px;color:var(--muted)">${id.role}</div>`;
+    const back = document.createElement('div'); back.className = 'card-back';
+    back.innerHTML = `<div style="font-weight:600;margin-bottom:6px">${id.name} — ${id.role}</div><div style="color:var(--muted)">${id.desc}</div>`;
+    inner.appendChild(front); inner.appendChild(back); wrap.appendChild(inner); cardsEl.appendChild(wrap);
+  });
 }
 
-/* Intersection observer to reveal chapters on scroll */
+/* Typewriter for chapters */
+function typeWriter(el, text, i){ if(i <= text.length){ el.textContent = text.slice(0,i); setTimeout(()=>typeWriter(el, text, i+1), 18 + Math.random()*18); } }
 const chapters = document.querySelectorAll('.chapter');
-const options = {threshold: 0.15};
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      entry.target.classList.add('visible');
-      // start typewriter for ch-line if exists
-      const line = entry.target.querySelector('.ch-line');
-      if(line && !line.dataset.typed){
-        typeWriter(line, line.dataset.line || '', 0);
-        line.dataset.typed = '1';
+const io = new IntersectionObserver((entries)=>{ entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add('visible'); const line = entry.target.querySelector('.ch-line'); if(line && !line.dataset.typed){ typeWriter(line, line.dataset.line||'', 0); line.dataset.typed = '1'; } } }); }, {threshold:0.15});
+chapters.forEach(c=>io.observe(c));
+
+/* Terminal commands */
+const termOut = document.getElementById('term-output');
+const termIn = document.getElementById('term-input');
+const termRunBtn = document.getElementById('term-run');
+if(termRunBtn) termRunBtn.addEventListener('click', runCmd);
+function runCmd(){
+  if(!termIn || !termOut) return;
+  const v = termIn.value.trim();
+  if(!v) return;
+  termOut.textContent += '\n> ' + v;
+  const cmd = v.toLowerCase();
+  if(cmd === 'help'){
+    termOut.textContent += '\ncommands: help, reveal, status, pulse, skills';
+  } else if(cmd === 'reveal'){
+    termOut.textContent += '\nRevealing identity layers...\n* Nexus modules unlocked.';
+    document.querySelectorAll('.card-flip .card-inner').forEach(c=>{ c.style.transform = 'rotateY(180deg)'; });
+  } else if(cmd === 'status'){
+    const loadEl = document.getElementById('load');
+    termOut.textContent += '\nSignal: STABLE\nLoad: ' + (loadEl ? loadEl.textContent : 'N/A');
+  } else if(cmd === 'pulse'){
+    termOut.textContent += '\nPulse engaged.'; flashPulse();
+  } else if(cmd === 'skills'){
+    termOut.textContent += '\nRendering skill graph...'; drawSkillGraph();
+  } else {
+    termOut.textContent += '\nunknown command';
+  }
+  termOut.scrollTop = termOut.scrollHeight;
+  termIn.value = '';
+}
+if(termIn) termIn.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') runCmd(); });
+
+/* Nexus pulse behavior */
+const pulseDot = document.querySelector('#nexus-pulse .dot');
+function flashPulse(){ if(!pulseDot) return; pulseDot.animate([{transform:'scale(1)'},{transform:'scale(1.8)'},{transform:'scale(1)'}],{duration:900,iterations:1}); }
+window.addEventListener('scroll', ()=>{
+  const s = Math.min(120, Math.abs(window.scrollY || 0));
+  const loadEl = document.getElementById('load');
+  if(loadEl) loadEl.textContent = Math.round(12 + s/4) + '%';
+  if(pulseDot) pulseDot.style.transform = `scale(${1 + Math.min(1, s/200)})`;
+});
+
+/* Skill graph */
+const skills = [{n:'SEO',v:0.9},{n:'UI/UX',v:0.85},{n:'Design',v:0.88},{n:'Ads',v:0.75},{n:'Writing',v:0.95},{n:'Videography',v:0.72},{n:'Photography',v:0.78},{n:'Fifth POV',v:0.98}];
+const sCanvas = document.getElementById('skill-canvas');
+const sCtx = sCanvas && sCanvas.getContext ? sCanvas.getContext('2d') : null;
+function drawSkillGraph(){
+  if(!sCtx || !sCanvas) return;
+  sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);
+  const centerX = sCanvas.width/2, centerY = sCanvas.height/2;
+  const radius = Math.min(centerX, centerY) - 40;
+  const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text') || '#e8e8e8';
+  skills.forEach((sk,i)=>{
+    const ang = (i/skills.length) * Math.PI * 2;
+    const x = centerX + Math.cos(ang) * radius * sk.v;
+    const y = centerY + Math.sin(ang) * radius * sk.v;
+    sCtx.beginPath(); sCtx.fillStyle = 'rgba(0,255,136,0.08)'; sCtx.strokeStyle = 'rgba(0,255,136,0.18)'; sCtx.lineWidth = 1; sCtx.arc(x,y,12 + sk.v*6,0,Math.PI*2); sCtx.fill(); sCtx.stroke();
+    sCtx.fillStyle = textColor.trim(); sCtx.font = "12px 'IBM Plex Mono'"; sCtx.fillText(sk.n, x + 16, y + 4);
+    for(let j=i+1;j<skills.length;j++){
+      const sk2 = skills[j];
+      const ang2 = (j/skills.length) * Math.PI * 2;
+      const x2 = centerX + Math.cos(ang2) * radius * sk2.v;
+      const y2 = centerY + Math.sin(ang2) * radius * sk2.v;
+      const dist = Math.hypot(x - x2, y - y2);
+      if(dist < 260){
+        sCtx.beginPath(); sCtx.strokeStyle = 'rgba(0,255,136,' + (((260 - dist) / 300) * 0.12) + ')'; sCtx.lineWidth = 0.8; sCtx.moveTo(x,y); sCtx.lineTo(x2,y2); sCtx.stroke();
       }
     }
   });
-}, options);
-chapters.forEach(c=>io.observe(c));
-
-/* simple typewriter effect for each chapter intro line */
-function typeWriter(el, text, i){
-  if(i <= text.length){
-    el.textContent = text.slice(0,i);
-    setTimeout(()=>typeWriter(el, text, i+1), 18 + Math.random()*18);
-  }
 }
 
-/* small parallax on mouse for subtle depth */
+function initAfterLoad(){ drawSkillGraph(); const sig = document.getElementById('signal'); if(sig) sig.textContent = 'STABLE'; }
+
+/* Parallax motion for chapters */
 document.addEventListener('mousemove', (e)=>{
   const x = (e.clientX / window.innerWidth) - 0.5;
   const y = (e.clientY / window.innerHeight) - 0.5;
-  document.querySelectorAll('.chapter.visible').forEach((el, idx)=>{
+  document.querySelectorAll('.chapter.visible').forEach((el,idx)=>{
     el.style.transform = `translate3d(${x*8}px, ${y*6}px, 0)`;
     el.style.boxShadow = `0 ${12 + Math.abs(y*20)}px ${40 + Math.abs(x*30)}px rgba(0,0,0,0.6)`;
   });
-});
-
-/* initial reveal of first chapter after load */
-window.addEventListener('load', ()=>{
-  const first = document.querySelector('.chapter[data-index="1"]');
-  if(first){
-    setTimeout(()=>{
-      first.classList.add('visible');
-      const line = first.querySelector('.ch-line');
-      if(line){ typeWriter(line, line.dataset.line || '', 0); line.dataset.typed='1'; }
-    }, 300);
-  }
 });
 </script>
 </body>
