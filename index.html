@@ -389,16 +389,15 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            section {
-                padding: 50px 20px;
-            }
+    	.cta-button-secondary {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+}
 
             .hero {
                 min-height: 80vh;
             }
-
-            .cta-button-secondary {
-                display: block;
                 margin-left: 0;
                 margin-top: 15px;
             }
@@ -434,6 +433,15 @@
             background-size: 50px 50px;
             pointer-events: none;
         }
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.step.active {
+    opacity: 1 !important;
+    border-left-color: #00ff88 !important;
+}
     </style>
 </head>
 <body>
@@ -443,6 +451,7 @@
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <a href="#home" class="text-xl font-bold text-accent">
                     <span style="color: #00ff88;">&lt;/RN&gt;</span>
+
                 </a>
                 <ul class="flex gap-8 text-sm font-medium">
                     <li><a href="#identity" class="text-text-secondary hover:text-accent transition">IDENTITY</a></li>
@@ -513,6 +522,88 @@
             </div>
         </section>
 
+<!-- MECHANISM (GSAP ENGINE SECTION) -->
+
+<section id="mechanism" style="padding:0;max-width:100%;">
+<div style="
+    width:100%;
+    text-align:Center;
+    padding:80px 0 40px;
+">
+    <h2 style="
+        font-size:clamp(2rem,5vw,3rem);
+        font-family:'IBM Plex Mono';
+        color:#ffffff;
+        display:inline-block;
+        position:relative;
+    ">
+        ◇ THE MECHANISM
+        <span style="
+            position:absolute;
+            bottom:-10px;
+            left:0;
+            width:100%;
+            height:3px;
+            background:#ffffff
+        "></span>
+    </h2>
+</div>
+
+    <div class="scrolly-container" style="display:flex;max-width:1400px;margin:auto;position:relative;">
+
+        <!-- TEXT COLUMN -->
+        <div class="text-column" style="width:50%;padding-bottom:10vh;">
+            
+            <div class="step" id="step1"
+                style="height:100vh;padding:10% 5% 10% 10%;opacity:0.3;transition:0.4s;border-left:1px solid rgba(0,255,136,0.1);">
+                <h3 style="color:#00ff88;font-family:'IBM Plex Mono';">Logic Synthesis</h3>
+                <p style="color:#a8a8a8;">He turns chaos into structure with an architect’s precision—treating volatility as raw material, tracing its fracture lines, measuring its pressure points, and shaping its turbulence into a framework that holds with impossible stability. What others call disorder, he reads as a blueprint waiting to be revealed, engineering order from the very forces meant to break it..</p>
+            </div>
+
+            <div class="step" id="step2"
+                style="height:100vh;padding:10% 5% 10% 10%;opacity:0.3;transition:0.4s;border-left:1px solid rgba(0,255,136,0.1);">
+                <h3 style="color:#00ff88;font-family:'IBM Plex Mono';">Abstract Morph</h3>
+                <p style="color:#a8a8a8;">The frame doesn’t break from force; it breaks because the simulation requires a new axis. Perspective shifts when the structure can no longer hold all possible outcomes, so the Void pulls it outward and refracts it. What looks like disruption from the outside is simply the system recalibrating—angles folding, viewpoints rotating, dimensions rearranging themselves until every pathway is visible at once. This isn’t rebellion against the frame; it’s evolution of the architecture..</p>
+            </div>
+
+            <div class="step" id="step3"
+                style="height:100vh;padding:10% 5% 10% 10%;opacity:0.3;transition:0.4s;border-left:1px solid rgba(0,255,136,0.1);">
+                <h3 style="color:#00ff88;font-family:'IBM Plex Mono';">Paradox Array</h3>
+                <p style="color:#a8a8a8;">Order emerging from controlled entropy.</p>
+            </div>
+
+        </div>
+
+        <!-- GRAPHIC COLUMN -->
+        <div class="graphic-column"
+            style="width:50%;height:100vh;position:sticky;top:0;display:flex;align-items:center;justify-content:center;">
+            
+            <div class="animation-stage" style="width:400px;height:400px;position:relative;">
+
+                <!-- Rotating ring -->
+                <div class="ring"
+                    style="width:100%;height:100%;border-radius:50%;border:1px dashed rgba(0,255,136,0.2);animation:spin 60s linear infinite;">
+                </div>
+
+                <!-- Morphing central shape -->
+                <div class="hero-shape"
+                    style="width:150px;height:150px;background:#00ff88;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:1px solid #fff;box-shadow:0 0 40px rgba(0,255,136,0.4);">
+                </div>
+
+                <!-- Dot grid explosion -->
+                <div class="dots-grid" style="
+                    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+                    display:grid;grid-template-columns:repeat(6,1fr);gap:15px;opacity:0;">
+                    <script>
+                        document.write('<div class="dot" style="width:8px;height:8px;background:#00ff88;border-radius:50%;"></div>'.repeat(36));
+                    </script>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
         <!-- About Section -->
         <section id="about">
             <h2>◆ CORE ESSENCE</h2>
@@ -628,22 +719,42 @@
 
     <script>
         // Intersection Observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+     const fadeInElements = document.querySelectorAll('.fade-in');
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                }
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            anime({
+                targets: entry.target,
+                opacity: [0, 1],
+                translateY: [50, 0],
+                duration: 1000,
+                easing: 'easeOutExpo',
+                delay: anime.stagger(100) // stagger multiple elements
             });
-        }, observerOptions);
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1 });
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
-        });
+fadeInElements.forEach(el => observer.observe(el));
+
+anime.timeline({ loop: false })
+  .add({
+    targets: '.hero h1',
+    opacity: [0, 1],
+    translateY: [50, 0],
+    duration: 1200,
+    easing: 'easeOutExpo'
+  })
+  .add({
+    targets: '.hero-subtitle',
+    opacity: [0, 1],
+    translateY: [20, 0],
+    duration: 1000,
+    easing: 'easeOutExpo',
+    offset: '-=600' // start before previous animation ends
+  });
 
         // Smooth scroll behavior for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -661,19 +772,29 @@
             const x = e.clientX / window.innerWidth;
             const y = e.clientY / window.innerHeight;
             
-            const cards = document.querySelectorAll('.identity-card, .profile-stat');
-            cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const cardX = rect.left + rect.width / 2;
-                const cardY = rect.top + rect.height / 2;
-                
-                const angle = Math.atan2(y * window.innerHeight - cardY, x * window.innerWidth - cardX);
-                const distance = 2;
-                
-                card.style.setProperty('--mouse-x', `${Math.cos(angle) * distance}px`);
-                card.style.setProperty('--mouse-y', `${Math.sin(angle) * distance}px`);
-            });
-        });
+            const cards = document.querySelectorAll('.identity-card, .profile-stat').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    anime({
+      targets: card,
+      translateY: -8,
+      scale: 1.05,
+      boxShadow: '0 25px 50px rgba(0,255,136,0.2)',
+      duration: 400,
+      easing: 'easeOutElastic(1, .6)'
+    });
+  });
+  card.addEventListener('mouseleave', () => {
+    anime({
+      targets: card,
+      translateY: 0,
+      scale: 1,
+      boxShadow: '0 0 0 rgba(0,255,136,0)',
+      duration: 400,
+      easing: 'easeOutElastic(1, .6)'
+    });
+  });
+});
+
 
         // Theme toggle hint
         const hintBox = document.createElement('div');
@@ -781,9 +902,52 @@ canvas.style.zIndex = "-1";
 canvas.style.pointerEvents = "none";
 document.body.style.background = "#0b0d10";
 </script>
+
+<!-- GSAP core + ScrollTrigger -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// highlight active step
+document.querySelectorAll('.step').forEach(step => {
+    ScrollTrigger.create({
+        trigger: step,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => step.classList.add('active'),
+        onLeave: () => step.classList.remove('active'),
+        onEnterBack: () => step.classList.add('active'),
+        onLeaveBack: () => step.classList.remove('active')
+    });
+});
+
+// shape morph
+gsap.to('.hero-shape', {
+    scrollTrigger: { trigger: '#step2', scrub: true },
+    borderRadius: '50%',
+    scale: 0.8,
+    rotation: 180,
+    backgroundColor: '#e8e8e8'
+});
+
+// explosion timeline
+let tl = gsap.timeline({
+    scrollTrigger: { trigger: '#step3', scrub: true }
+});
+
+tl.to('.hero-shape', { opacity: 0, scale: 3 })
+  .to('.dots-grid', { opacity: 1 }, '<');
+
+// dot rise animation
+gsap.from('.dot', {
+    scrollTrigger: { trigger: '#step3', toggleActions: 'play none none reverse' },
+    scale: 0,
+    y: 20,
+    stagger: { amount: 0.6, grid: [6, 6], from: 'center' },
+    duration: 0.7
+});
+</script>
 </body>
 </html>
-
-```
-
-
