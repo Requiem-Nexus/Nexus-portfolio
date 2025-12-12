@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracks & Beats — Requiem Nexus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0a0a0a;
+            --grey: #1A1A1A;
+            --accent: #00ff88;
+            --accent-dark: #00cc6a;
+            --text: #e8e8e8;
+            --muted: #a8a8a8;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--void), var(--grey), var(--void));
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .track-card {
+            background: rgba(30,30,30,0.5);
+            border: 1px solid rgba(0,255,136,0.2);
+            padding: 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all .3s ease;
+        }
+        .track-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px rgba(0,255,136,0.15);
+        }
+        .lyrics-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-left: 3px solid var(--accent);
+            background: rgba(255,255,255,0.03);
+            border-radius: 6px;
+            display: none;
+            white-space: pre-wrap;
+            color: var(--muted);
+            font-family: 'IBM Plex Mono';
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'IBM Plex Mono';
+            transition: .3s ease;
+        }
+        .back-btn:hover {
+            background: rgba(0,255,136,0.1);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-overlay"></div>
+
+<!-- NAV -->
+<nav class="py-5 px-8 sticky top-0 backdrop-blur-md bg-black/40 border-b border-accent/20 z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <a href="index.html" class="text-xl font-bold" style="color: var(--accent);">&lt;/RN&gt;</a>
+        <div class="flex gap-6 text-sm">
+            <a href="index.html#identity" class="hover:text-accent">IDENTITY</a>
+            <a href="projects.html" class="hover:text-accent">PROJECTS</a>
+            <a href="index.html#contact" class="hover:text-accent">CONTACT</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HEADER -->
+<section class="max-w-5xl mx-auto text-center mt-16">
+    <h1 class="text-4xl md:text-5xl font-bold" style="background: linear-gradient(135deg, var(--accent), var(--accent-dark)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'IBM Plex Mono';">
+        TRACKS & BEATS — SIGNAL RESONANCE
+    </h1>
+    <p class="text-muted mt-3" style="color: var(--muted); font-family: 'IBM Plex Mono';">
+        Click a track to reveal the lyrics behind the signal.
+    </p>
+</section>
+
+<!-- GRID -->
+<section class="max-w-5xl mx-auto mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    <!-- TRACK TEMPLATE (you can duplicate these) -->
+    <div class="track-card" onclick="toggleLyrics(this)">
+        <h2 class="text-xl font-semibold">Track 01 — VOIDWALKER</h2>
+        <p class="text-muted" style="color: var(--muted);">The first descent.</p>
+        <div class="lyrics-box">
+Your lyrics here…
+Example:
+"I walk between the echoes,
+Breathing static into flame…"
+        </div>
+    </div>
+
+    <div class="track-card" onclick="toggleLyrics(this)">
+        <h2 class="text-xl font-semibold">Track 02 — FIFTH POV</h2>
+        <p class="text-muted">Seeing all outcomes.</p>
+        <div class="lyrics-box">
+Your lyrics here…
+        </div>
+    </div>
+
+    <div class="track-card" onclick="toggleLyrics(this)">
+        <h2 class="text-xl font-semibold">Track 03 — NEXUS RISING</h2>
+        <p class="text-muted">Becoming the system.</p>
+        <div class="lyrics-box">
+Your lyrics here…
+        </div>
+    </div>
+
+</section>
+
+<div class="text-center mt-20 mb-16">
+    <a href="projects.html" class="back-btn">// Return to Projects</a>
+</div>
+
+<script>
+function toggleLyrics(card) {
+    const box = card.querySelector(".lyrics-box");
+    const isOpen = box.style.display === "block";
+
+    // Close all others
+    document.querySelectorAll(".lyrics-box").forEach(b => b.style.display = "none");
+
+    // Toggle current
+    box.style.display = isOpen ? "none" : "block";
+}
+</script>
+</body>
+</html>
